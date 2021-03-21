@@ -3,6 +3,7 @@ import sys
 import numpy as np
 import time
 import matplotlib.pyplot as plt
+import itertools
 
 HOST = '127.0.0.1'
 PORT = 1883
@@ -35,7 +36,7 @@ def on_message(client, userdata, msg):
         subs -= 1
     else:
         if topic in topics:
-            topics[topic].append(message)
+            topics[topic].append(int(message))
 
 
 client = mqtt.Client()
@@ -57,12 +58,9 @@ print("Disconnected")
 # data zawiera wszystkie dane pomiarowe
 plt.figure()
 for key, value in topics.items():
-    n = len(value)
-    X = np.arange(n)
-    Y = np.array(value)
-    print(X)
-    print(Y)
-    plt.plot(X, Y, '*', label=(key.split("/")[1]))
+    X = list(range(1, len(value)+1))
+    Y = value
+    plt.plot(X, Y, 'o', label=(key.split("/")[1]))
 plt.xlabel('nr pomiaru')
 plt.ylabel('wartość')
 plt.legend()

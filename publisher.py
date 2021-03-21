@@ -50,7 +50,7 @@ while True:
     for topic in topics:
         i = random.randint(min_n, max_n)
         client.publish(topic, i)
-        time.sleep(0.2)
+        time.sleep(0.1)
 
     tmp += 1
     if tmp == n:
