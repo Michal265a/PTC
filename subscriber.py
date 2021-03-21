@@ -7,9 +7,10 @@ import matplotlib.pyplot as plt
 localhost = '127.0.0.1'
 port = 1883
 timeout = 60
-topic = "/topic/"
+topic = "topic/"
 data = []
 subs = 0
+
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with error code " + str(rc))
@@ -17,9 +18,10 @@ def on_connect(client, userdata, flags, rc):
         global data
         global subs
         client.subscribe(topic + str(i))
-        subs+=1
+        subs += 1
         data.append([])
-  
+
+
 def on_message(client, userdata, msg):
     global data
     global subs
@@ -28,11 +30,11 @@ def on_message(client, userdata, msg):
     message = msg.payload.decode()
     if message == "END":
         client.unsubscribe(msg.topic)
-        subs-=1
+        subs -= 1
     else:
         data[nr_topic].append(int(message))
-     
-  
+
+
 client = mqtt.Client()
 client.connect(localhost, port, timeout)
 
@@ -47,15 +49,15 @@ client.loop_stop()
 client.disconnect()
 print("Disconnected")
 
-#data zawiera wszystkie dane pomiarowe
-i=0
+# data zawiera wszystkie dane pomiarowe
+i = 0
 plt.figure()
 for tab in data:
-    i+=1
+    i += 1
     n = len(tab)
-    X=np.arange(n)
-    Y=np.array(tab)
-    plt.plot(X,Y,'.-', label=("data"+str(i)))
+    X = np.arange(n)
+    Y = np.array(tab)
+    plt.plot(X, Y, '.-', label=("data" + str(i)))
 plt.xlabel('nr pomiaru')
 plt.ylabel('wartość')
 plt.legend()
