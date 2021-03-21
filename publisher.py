@@ -18,6 +18,9 @@ przerwiemy działania, wystarczy w pierwszym topicu wpisać wartość inf.
 
 """
 
+print(len(sys.argv))
+if len(sys.argv) < 5:
+    raise Exception("Not enough arguments")
 # Czytanie listy argumentów
 if str(sys.argv[1]) == "inf":
     n = math.inf
@@ -36,24 +39,28 @@ localhost = '127.0.0.1'
 port = 1883
 timeout = 60
 client = mqtt.Client()
+print("Connecting..")
 client.connect(localhost, port, timeout)
+print("Connected")
 
 # Przesyłanie danych
 finish = True
 tmp = 0
+print("Sending data...")
 while finish:
     for topic in topics:
         i = random.randint(min_n, max_n)
         client.publish(topic, i)
-        print(i)
         time.sleep(0.2)
-    tmp += 1
 
+    tmp += 1
     if tmp == n:
         finish = False
 
-# sygnał pomocniczy informujacy o koncu przesylania danych
+# sygnał pomocniczy informujacy o koncu przesylania danych\
+print("Data sent")
 for topic in topics:
-    client.publish("toipic/" + topic, "END")
+    client.publish("topic/" + topic, "END")
 
 client.disconnect()  # odłączenie z brokerem
+print("Disconnected")
