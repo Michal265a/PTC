@@ -16,13 +16,13 @@ subs = 0
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with error code " + str(rc))
-    for i in sys.argv[1:]:
+    for arg in sys.argv[1:]:
         global data
         global subs
-        client.subscribe(TOPIC + str(i))
+        client.subscribe(TOPIC + str(arg))
         subs += 1
         data.append([])
-        topics[TOPIC + str(i)] = []
+        topics[TOPIC + str(arg)] = []
 
 
 def on_message(client, userdata, msg):
@@ -36,7 +36,6 @@ def on_message(client, userdata, msg):
     else:
         if topic in topics:
             topics[topic].append(message)
-
 
 
 client = mqtt.Client()
@@ -54,18 +53,16 @@ client.loop_stop()
 client.disconnect()
 print("Disconnected")
 
-for key, value in topics.items():
-    print(key)
-    print(value)
+
 # data zawiera wszystkie dane pomiarowe
-i = 0
 plt.figure()
-for tab in data:
-    i += 1
-    n = len(tab)
+for key, value in topics.items():
+    n = len(value)
     X = np.arange(n)
-    Y = np.array(tab)
-    plt.plot(X, Y, '.-', label=("data" + str(i)))
+    Y = np.array(value)
+    print(X)
+    print(Y)
+    plt.plot(X, Y, '*', label=(key.split("/")[1]))
 plt.xlabel('nr pomiaru')
 plt.ylabel('wartość')
 plt.legend()
