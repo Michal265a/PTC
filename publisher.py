@@ -31,23 +31,22 @@ max_n = int(sys.argv[3])  # maksymalna wartość przesłanych danych
 topics = []  # lista topiców
 
 for topic in sys.argv[4:]:
-    topics.append("toipic/" + topic)
+    topics.append("topic/" + str(topic))
 
 
 # Połączenie z brokerem
-localhost = '127.0.0.1'
-port = 1883
-timeout = 60
+HOST = '127.0.0.1'
+PORT = 1883
+TIMEOUT = 60
 client = mqtt.Client()
 print("Connecting..")
-client.connect(localhost, port, timeout)
+client.connect(HOST, PORT, TIMEOUT)
 print("Connected")
 
 # Przesyłanie danych
-finish = True
 tmp = 0
 print("Sending data...")
-while finish:
+while True:
     for topic in topics:
         i = random.randint(min_n, max_n)
         client.publish(topic, i)
@@ -55,12 +54,12 @@ while finish:
 
     tmp += 1
     if tmp == n:
-        finish = False
+        break
 
 # sygnał pomocniczy informujacy o koncu przesylania danych\
 print("Data sent")
 for topic in topics:
-    client.publish("topic/" + topic, "END")
+    client.publish(topic, "END")
 
 client.disconnect()  # odłączenie z brokerem
 print("Disconnected")
