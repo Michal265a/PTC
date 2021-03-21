@@ -18,7 +18,7 @@ przerwiemy działania, wystarczy w pierwszym topicu wpisać wartość inf.
 
 """
 
-print(len(sys.argv))
+
 if len(sys.argv) < 5:
     raise Exception("Not enough arguments")
 # Czytanie listy argumentów
