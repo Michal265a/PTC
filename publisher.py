@@ -60,6 +60,7 @@ while True:
 print("Data sent")
 for topic in topics:
     client.publish(topic, "END")
+    time.sleep(0.1)
 
 client.disconnect()  # odłączenie z brokerem
 print("Disconnected")
