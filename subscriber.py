@@ -60,6 +60,9 @@ while subs > 0:
  
 for key, value in topics.items():
     plt.plot(list(range(1, len(value) + 1)), value, 'o-', label=(key.split("/")[1]))
+plt.xlabel('nr pomiaru')
+plt.ylabel('wartość')
+plt.legend()
 plt.show()
 client.loop_stop()
 client.disconnect()
