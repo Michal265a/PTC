@@ -57,8 +57,7 @@ while subs > 0:
     plt.draw()
     plt.pause(0.3)
     plt.cla()
-    print(subs)
-
+ 
 for key, value in topics.items():
     plt.plot(list(range(1, len(value) + 1)), value, 'o-', label=(key.split("/")[1]))
 plt.show()
