@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 """
 Program subscribera dla protokołu mqtt.
 Do uruchuomienia skryptu należy podać co najmniej 1 argumenty będący subskrybowanymi topicami
-
 Po otrzymaniu wszystkich danych program rysuje wykres przedstawiający otrzymane dane
 """
 
@@ -48,19 +47,22 @@ client.on_message = on_message
 client.loop_start()
 time.sleep(1)
 
-#  Wykonujemy program dopóki mamy istniejące topici które subskrybujemy
+#  Wykonujemy wykresy w czasie rzeczywistym
 while subs > 0:
-    pass
+    for key, value in topics.items():
+        plt.plot(list(range(1, len(value) + 1)), value, 'o', label=(key.split("/")[1]))
+    plt.xlabel('nr pomiaru')
+    plt.ylabel('wartość')
+    plt.legend()
+    plt.draw()
+    plt.pause(0.3)
+    plt.cla()
 
+for key, value in topics.items():
+    plt.plot(list(range(1, len(value) + 1)), value, 'o', label=(key.split("/")[1]))
+plt.show()
 client.loop_stop()
 client.disconnect()
 print("Disconnected")
 
-#  Rysujemy wykres
-plt.figure()
-for key, value in topics.items():
-    plt.plot(list(range(1, len(value) + 1)), value, 'o', label=(key.split("/")[1]))
-plt.xlabel('nr pomiaru')
-plt.ylabel('wartość')
-plt.legend()
-plt.show()
+
