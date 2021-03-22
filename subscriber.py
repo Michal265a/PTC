@@ -31,11 +31,11 @@ def on_message(client, userdata, msg):
     global subs
     topic = msg.topic
     message = str(msg.payload.decode())
-    if message == "END":
-        client.unsubscribe(msg.topic)
+    if message == "END" and topic in topics.keys():
+        client.unsubscribe(topic)
         subs -= 1
     else:
-        if topic in topics:
+        if topic in topics.keys():
             topics[topic].append(int(message))
 
 
@@ -50,22 +50,20 @@ time.sleep(1)
 #  Wykonujemy wykresy w czasie rzeczywistym
 while subs > 0:
     for key, value in topics.items():
-        plt.plot(list(range(1, len(value) + 1)), value, 'o-', label=(key.split("/")[1]))
+        plt.plot(list(range(1, len(value) + 1)), value, '-o', label=(key.split("/")[1]))
     plt.xlabel('nr pomiaru')
     plt.ylabel('wartość')
     plt.legend()
     plt.draw()
     plt.pause(0.3)
     plt.cla()
- 
-for key, value in topics.items():
-    plt.plot(list(range(1, len(value) + 1)), value, 'o-', label=(key.split("/")[1]))
-plt.xlabel('nr pomiaru')
-plt.ylabel('wartość')
-plt.legend()
-plt.show()
+
 client.loop_stop()
 client.disconnect()
 print("Disconnected")
 
+for key, value in topics.items():
+    plt.plot(list(range(1, len(value) + 1)), value, '-o', label=(key.split("/")[1]))
+
+plt.show()
 

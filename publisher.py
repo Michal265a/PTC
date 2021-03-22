@@ -30,6 +30,7 @@ min_n = int(sys.argv[2])  # minimalna wartość przesłanych danych
 max_n = int(sys.argv[3])  # maksymalna wartość przesłanych danych
 topics = []  # lista topiców
 
+
 for topic in sys.argv[4:]:
     topics.append("topic/" + str(topic))
 
@@ -50,7 +51,7 @@ while True:
     for topic in topics:
         i = random.randint(min_n, max_n)
         client.publish(topic, i)
-        time.sleep(0.1)
+        time.sleep(0.3)
 
     tmp += 1
     if tmp == n:
@@ -60,7 +61,7 @@ while True:
 print("Data sent")
 for topic in topics:
     client.publish(topic, "END")
-    time.sleep(0.1)
+    time.sleep(0.3)
 
 client.disconnect()  # odłączenie z brokerem
 print("Disconnected")
