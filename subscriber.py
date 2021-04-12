@@ -17,6 +17,27 @@ TOPIC = "topic/"
 topics = {}  # Słownik zawierający subsrybowane topici oraz dane które z nich dotarły
 subs = 0  # Liczba subskrybowanych topiców
 
+class Message():
+    def __init__(self, full_message):
+        full_message = full_message.split(sep="#")
+        self.message = full_message[2]
+        self.hour = full_message[1]
+        self.date = full_message[0]
+
+    @property
+    def fulldate(self):
+        return self.date + " " + self.hour
+
+    def print(self):
+        print(f"messege: {self.message}, datetime: {self.fulldate}")
+
+class Topic():
+    def __init__(self, full_topic):
+        full_topic = full_topic.split(sep="/")
+        self.name = full_topic[0]
+        self.device_id = full_topic[1]
+        self.channel_id = full_topic[2]
+
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with error code " + str(rc))
@@ -30,13 +51,13 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client, userdata, msg):
     global subs
     topic = msg.topic
-    message = str(msg.payload.decode())
-    if message == "END" and topic in topics.keys():
+    message = Message(str(msg.payload.decode()))
+    if str(message.message) == "END" and topic in topics.keys():
         client.unsubscribe(topic)
         subs -= 1
     else:
         if topic in topics.keys():
-            topics[topic].append(int(message))
+            topics[topic].append(int(message.message))
 
 
 # Łączymy z protokołem oraz
@@ -64,6 +85,5 @@ print("Disconnected")
 
 for key, value in topics.items():
     plt.plot(list(range(1, len(value) + 1)), value, '-o', label=(key.split("/")[1]))
-
 plt.show()
 

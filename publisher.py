@@ -3,6 +3,7 @@ import time
 import random
 import sys
 import math
+import datetime
 
 """
 Program publishera dal protokołu mqtt.
@@ -17,6 +18,13 @@ zakończeniu przesyłania danych. Jeżeli chcemy by dane się przysyłały w spo
 przerwiemy działania, wystarczy w pierwszym topicu wpisać wartość inf.
 
 """
+
+def make_messege(messege):
+    now = datetime.datetime.now()
+    date = now.strftime("%d/%m/%Y")
+    hour = now.strftime("%H:%M")
+    separator = "#"
+    return separator.join([str(date), str(hour), str(messege)])
 
 
 if len(sys.argv) < 5:
@@ -50,7 +58,7 @@ print("Sending data...")
 while True:
     for topic in topics:
         i = random.randint(min_n, max_n)
-        client.publish(topic, i)
+        client.publish(topic, make_messege(i))
         time.sleep(0.3)
 
     tmp += 1
@@ -60,7 +68,7 @@ while True:
 # sygnał pomocniczy informujacy o koncu przesylania danych\
 print("Data sent")
 for topic in topics:
-    client.publish(topic, "END")
+    client.publish(topic, make_messege("END"))
     time.sleep(0.3)
 
 client.disconnect()  # odłączenie z brokerem
