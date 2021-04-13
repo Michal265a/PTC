@@ -22,7 +22,7 @@ przerwiemy działania, wystarczy w pierwszym topicu wpisać wartość inf.
 def make_messege(messege):
     now = datetime.datetime.now()
     date = now.strftime("%d/%m/%Y")
-    hour = now.strftime("%H:%M")
+    hour = now.strftime("%H:%M:%S")
     separator = "#"
     return separator.join([str(date), str(hour), str(messege)])
 
@@ -40,7 +40,7 @@ topics = []  # lista topiców
 
 
 for topic in sys.argv[4:]:
-    topics.append("topic/" + str(topic))
+    topics.append(str(topic))
 
 
 # Połączenie z brokerem
