@@ -5,8 +5,7 @@ import matplotlib.pyplot as plt
 import mysql.connector
 """
 Program subscribera dla protokołu mqtt.
-Do uruchuomienia skryptu należy podać co najmniej 1 argumenty będący subskrybowanymi topicami
-Po otrzymaniu wszystkich danych program rysuje wykres przedstawiający otrzymane dane
+Do uruchuomienia skryptu należy podać co najmniej 1 argumenty będący subskrybowanymi topicami. Dane są wysyłane do bazy danych mysql.
 """
 
 HOST = '127.0.0.1'
@@ -14,9 +13,10 @@ PORT = 1883
 TIMEOUT = 60
 
 mydb = mysql.connector.connect(
-  host="localhost",
-  user="yourusername",
-  password="yourpassword"
+    host="localhost",
+    user="root",
+    password="",
+    database="ptc_mqtt"
 )
 mycursor = mydb.cursor()
 topics = {}  # Słownik zawierający subsrybowane topici oraz dane które z nich dotarły
@@ -28,7 +28,7 @@ class Message():
         self.message = full_message[2]
         self.hour = full_message[1]
         self.date = full_message[0]
-
+       
     @property
     def fulldate(self):
         return self.date + " " + self.hour
@@ -69,8 +69,8 @@ def on_message(client, userdata, msg):
     else:
         if topic.full_topic in topics.keys():
             topics[topic.full_topic].append(int(message.message))
-            val = (message.message, message.fulldate)
-            sql = None
+            val = (topic.device_id, topic.channel_id, message.fulldate, message.message)
+            sql = "INSERT INTO measurements (id_device, id_channel, datetime, measure) VALUES (%s, %s, %s, %s)"
             mycursor.execute(sql, val)
             mydb.commit()
 
@@ -80,4 +80,7 @@ client.on_connect = on_connect
 client.on_message = on_message
 client.loop_start()
 time.sleep(1)
+while subs >0:
+    pass
+client.loop_stop()
 

@@ -6,23 +6,21 @@ import math
 import datetime
 
 """
-Program publishera dal protokołu mqtt.
+Program publishera dla protokołu mqtt.
 Do uruchuomienia skryptu należy podać co najmniej 4 argumenty.
 1 - liczbe danych ktore publisher musi przesłac do poszczególnych topiców
 2 - minimalna wartość przesyłanych danych
 3 - maksymalna wartość przesyłanych danych
 4 - nazwa topicu
 
-Dla ułatawienia testów współpracy publisher z subsrciberem dodaliśmy również na koniec sygnał informujący o 
-zakończeniu przesyłania danych. Jeżeli chcemy by dane się przysyłały w sposób ciągły wystarczy dopóki ręcznie nie 
-przerwiemy działania, wystarczy w pierwszym topicu wpisać wartość inf.
+Dla ułatawienia testów współpracy publisher z subsrciberem dodaliśmy również na koniec sygnał informujący o zakończeniu przesyłania danych. Jeżeli chcemy by dane się przysyłały w sposób ciągły wystarczy dopóki ręcznie nie przerwiemy działania, wystarczy w pierwszym topicu wpisać wartość inf.
 
 """
 
 def make_messege(messege):
     now = datetime.datetime.now()
-    date = now.strftime("%d/%m/%Y")
-    hour = now.strftime("%H:%M:%S")
+    date = now.strftime("%Y-%m-%d")
+    hour = now.strftime("%H:%M:%S.%f")
     separator = "#"
     return separator.join([str(date), str(hour), str(messege)])
 
