@@ -2,7 +2,7 @@ import paho.mqtt.client as mqtt
 import sys
 import time
 import matplotlib.pyplot as plt
-
+import mysql.connector
 """
 Program subscribera dla protokołu mqtt.
 Do uruchuomienia skryptu należy podać co najmniej 1 argumenty będący subskrybowanymi topicami
@@ -13,7 +13,12 @@ HOST = '127.0.0.1'
 PORT = 1883
 TIMEOUT = 60
 
-TOPIC = "topic/"
+mydb = mysql.connector.connect(
+  host="localhost",
+  user="yourusername",
+  password="yourpassword"
+)
+mycursor = mydb.cursor()
 topics = {}  # Słownik zawierający subsrybowane topici oraz dane które z nich dotarły
 subs = 0  # Liczba subskrybowanych topiców
 
@@ -64,33 +69,15 @@ def on_message(client, userdata, msg):
     else:
         if topic.full_topic in topics.keys():
             topics[topic.full_topic].append(int(message.message))
+            val = (message.message, message.fulldate)
+            sql = None
+            mycursor.execute(sql, val)
+            mydb.commit()
 
-
-# Łączymy z protokołem oraz
 client = mqtt.Client()
 client.connect(HOST, PORT, TIMEOUT)
 client.on_connect = on_connect
 client.on_message = on_message
 client.loop_start()
 time.sleep(1)
-
-#  Wykonujemy wykresy w czasie rzeczywistym
-# while subs > 0:
-#     for key, value in topics.items():
-#         plt.plot(list(range(1, len(value) + 1)), value, '-o', label=key)
-#     plt.xlabel('nr pomiaru')
-#     plt.ylabel('wartość')
-#     plt.legend()
-#     plt.draw()
-#     plt.pause(0.3)
-#     plt.cla()
-#
-# client.loop_stop()
-# client.disconnect()
-# print("Disconnected")
-#
-# for key, value in topics.items():
-#     print(key)
-#     plt.plot(list(range(1, len(value) + 1)), value, '-o', label=key)
-# plt.show()
 

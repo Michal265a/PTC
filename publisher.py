@@ -53,13 +53,14 @@ client.connect(HOST, PORT, TIMEOUT)
 print("Connected")
 
 # Przesyłanie danych
+SLEEP = 0.5
 tmp = 0
 print("Sending data...")
 while True:
     for topic in topics:
         i = random.randint(min_n, max_n)
         client.publish(topic, make_messege(i))
-        time.sleep(0.3)
+        time.sleep(SLEEP)
 
     tmp += 1
     if tmp == n:
@@ -69,7 +70,7 @@ while True:
 print("Data sent")
 for topic in topics:
     client.publish(topic, make_messege("END"))
-    time.sleep(0.3)
+    time.sleep(SLEEP)
 
 client.disconnect()  # odłączenie z brokerem
 print("Disconnected")
